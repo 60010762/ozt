@@ -126,6 +126,19 @@
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
 							<?
+							//стрелки навигации по вопросам
+							if ($features>1) {
+								echo '<li class="page-item"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.($features-1).'&featuress='.$num_features.'&cmd=create&create_next='.$create_next.'">&#9668;</a></li>';								
+							}else{
+								echo '<li class="page-item"><a class="page-link"><font color="#bbbbbb">&#9668;</font></a></li>';
+							}
+							if ($features<$features_count){
+								echo '<li class="page-item"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.($features+1).'&featuress='.$num_features.'&cmd=create&create_next='.$create_next.'">&#9658;</a></li>';
+							}else{
+								echo '<li class="page-item"><a class="page-link"><font color="#bbbbbb">&#9658;</font></a></li>';
+							}
+							echo '<li>&emsp;</li>';
+							
 							for ($num_features=1;$num_features<=$features_count;$num_features++){
 								if ($num_features==$features){$style_features="active";}else{$style_features="";}
 								echo '<li class="page-item '.$style_features.'"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.$num_features.'&cmd=create&create_next='.$create_next.'">'.($num_features).'</a></li>';
@@ -133,10 +146,13 @@
 							if ($features==$features_count+1 && $features<=20) {
 								echo '<li class="page-item active"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.$features.'&cmd=create&create_next='.$create_next.'">'.($features).'</a></li>';
 							}
+							if ($features==$features_count && $features<20){
+								echo '<li class="page-item"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.($features+1).'&featuress='.$num_features.'&cmd=create&create_next='.$create_next.'" Class="btn btn-info">+</a></li>'; 						
+							}
 							?>
 						</ul>
 						<?
-					if ($features>1){
+					/* if ($features>1){
 						?>
 						<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features-1)?>&featuress=<?=$num_features?>&cmd=create&create_next=<?=$create_next?>" Class="btn btn-info">Предыдущий вопрос</a> 
 						<?
@@ -145,12 +161,12 @@
 						?>
 						<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>&featuress=<?=$num_features?>&cmd=create&create_next=<?=$create_next?>" Class="btn btn-info">Следующий вопрос</a>  
 						<?
-					}
-					if ($features==$features_count && $features<20){
+					} */
+					/* if ($features==$features_count && $features<20){
 						?>
 						<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>&featuress=<?=$num_features?>&cmd=create&create_next=<?=$create_next?>" Class="btn btn-info">Добавить новый вопрос</a>  
 						<?
-					}
+					} */
 					?>
 					</nav><hr>
 					

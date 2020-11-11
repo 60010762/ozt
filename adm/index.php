@@ -47,7 +47,7 @@ if ($_GET["features"]>1){
 		$features = 1;
 	}
 }
-if ($features>20) {$features=20;}
+if ($features>50) {$features=50;}
 if ($features<1) {$features=1;}
 
 if ($_GET["cmd"]<>''){
@@ -80,21 +80,21 @@ $title_name[2]="Редактор тестов";
 $title_name[3]="Статистика";
 
 //Массив отделов
-$otdel_name[1]=" / Стройматериалы";
-$otdel_name[2]=" / Столярные изделия";
-$otdel_name[3]=" / Электротовары";
-$otdel_name[4]=" / Инструменты";
-$otdel_name[5]=" / Напольные покрытия";
-$otdel_name[6]=" / Плитка";
-$otdel_name[7]=" / Сантехника";
-$otdel_name[8]=" / Водоснабжение";
-$otdel_name[9]=" / Сад";
-$otdel_name[10]=" / Скобяные изделия";
-$otdel_name[11]=" / Краски";
-$otdel_name[12]=" / Декор";
-$otdel_name[13]=" / Освещение";
-$otdel_name[14]=" / Хранение";
-$otdel_name[15]=" / Кухни";
+$otdel_name[1]="Стройматериалы";
+$otdel_name[2]="Столярные изделия";
+$otdel_name[3]="Электротовары";
+$otdel_name[4]="Инструменты";
+$otdel_name[5]="Напольные покрытия";
+$otdel_name[6]="Плитка";
+$otdel_name[7]="Сантехника";
+$otdel_name[8]="Водоснабжение";
+$otdel_name[9]="Сад";
+$otdel_name[10]="Скобяные изделия";
+$otdel_name[11]="Краски";
+$otdel_name[12]="Декор";
+$otdel_name[13]="Освещение";
+$otdel_name[14]="Хранение";
+$otdel_name[15]="Кухни";
 
 
 //Описание общее
@@ -187,7 +187,10 @@ if($_GET['submit_del_select1']=='del') {
 					<a href="index.php?select_menu=3"><?=$title_name[3]?></a>
 
 					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-						<h5><font color="grey"><?=$title_name[$select_menu].$otdel_name[$otdel]?></font></h5>				
+						<?
+						if ($otdel>0) {$slash = " / ";} else {$slash = "";}
+						?>
+						<h5><font color="grey"><?=$title_name[$select_menu].$slash?> <a href="index.php?select_menu=<?=$select_menu?>"><?=$otdel_name[$otdel]?></a></font></h5>				
 					</div>
 					
 					<?

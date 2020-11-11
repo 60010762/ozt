@@ -64,7 +64,7 @@
 						and (SELECT COUNT(id_question) FROM ozt.ozt_questions WHERE id_question = q.id) > 0
 						and (SELECT status from ozt.ozt_user_test_status 
 							 WHERE ldap = '".$_SESSION['user_id']."' and id_question = q.id) is null				
-						ORDER BY q.mag, q.name";
+						ORDER BY q.otdel, q.name";
 
 				$sql_ozt_question = mysqli_query($db, $sql);
 				$nums_question = mysqli_num_rows($sql_ozt_question);
@@ -78,7 +78,7 @@
 					echo '<tr><th>Отдел</th><th>Название теста</th></tr>';
 					while($rows_question = mysqli_fetch_row($sql_ozt_question)){
 						$num_table++;
-						echo '<tr><td>'.$num_table.'</td><td>','<a href="index.php?select_menu='.$select_menu.'&idtest='.$rows_question[0].'">'.$rows_question[2].'</td></tr>';					  
+						echo '<tr><td>'.$rows_question[1].'</td><td>','<a href="index.php?select_menu='.$select_menu.'&idtest='.$rows_question[0].'">'.$rows_question[2].'</td></tr>';					  
 					}
 					echo '</table>';					
 				} else {
