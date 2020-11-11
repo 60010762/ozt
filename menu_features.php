@@ -15,7 +15,7 @@
 			$features = 1;
 		}
 	}
-	if ($features>20) {$features=20;}
+	if ($features>50) {$features=50;}
 	if ($features<1) {$features=1;}
 	?>
 	<center>
@@ -39,28 +39,30 @@
 
 				<?
 			} else { //если выбран отдел, покажем доступные ОП
-				$sql_ozt_features = mysqli_query($db,"SELECT * FROM ozt.ozt_sales_features WHERE mag = '".$_SESSION['postofficebox']."' AND otdel = '".$otdel."' AND feature_numb = '".$features."'");
+				$sql_ozt_features = mysqli_query($db,"SELECT sf.*, (SELECT COUNT(*) FROM ozt.ozt_sales_features WHERE mag = sf.mag AND otdel = sf.otdel) FROM ozt.ozt_sales_features AS sf WHERE sf.mag = '".$_SESSION['postofficebox']."' AND sf.otdel = '".$otdel."' AND sf.feature_numb = '".$features."'");
 				$rows_ozt_features = mysqli_fetch_row($sql_ozt_features);
+				$features_count = $rows_ozt_features[8];
 				?>
 				
 				
+				
 
-					<h3><?=$otdel_name[$otdel]?> <?=($features)?>/20</h3>						
+					<h3><?=$otdel_name[$otdel]?> <?=($features)?>/<?=($features_count)?></h3>						
 					<h4></h4>
 					<!--<nav aria-label="Page navigation example">
 						<ul class="pagination">
-							<?
-							 for ($num_features=1;$num_features<=20;$num_features++){
+							/* <?
+							 for ($num_features=1;$num_features<=$features_count;$num_features++){
 								if ($num_features==$features){$style_features="active";}else{$style_features="";}
 								echo '<li class="page-item '.$style_features.'"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.$num_features.'">'.($num_features).'</a></li>';
 							}
-							?>
+							?> */
 						</ul>
 					</nav>-->
 					
 					<?
 					if ($info_text<>""){
-						echo '<div class="alert alert-success" role="alert">'.$info_text.'</div>';
+						echo '<hr><div class="alert alert-success" role="alert">'.$info_text.'</div>';
 					}
 					?>
 					<hr/>
@@ -110,7 +112,7 @@
 							</td>
 							<td>
 								<?
-								if ($features<20){
+								if ($features<$features_count){
 									?>
 									<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>" Class="fixedbutnext" style="font-size: 20px">&#9658;</a>  
 									<?

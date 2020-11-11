@@ -217,7 +217,7 @@
 		
 
 				
-			</br><a class="btn btn-success" href="index.php?select_menu=2&otdel=<?=$otdel?>"/>К списку тестов</a>
+			</br><a class="btn btn-success" href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>"/>К списку тестов</a>
 			
 
 				<?

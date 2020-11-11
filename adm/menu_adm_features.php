@@ -51,23 +51,47 @@ if($_GET['submit_del_select2']=='del') {
 }
 	
 if ($otdel>0){
-	//$sql_ozt_features = mysqli_query($db,"SELECT * FROM `ozt`.`ozt_features` WHERE mag = '".$_SESSION['postofficebox']."' AND otdel = '".$otdel."'");
-	$sql_ozt_features = mysqli_query($db,"SELECT * FROM ozt.ozt_sales_features WHERE mag = '".$_SESSION['postofficebox']."' AND otdel = '".$otdel."' AND feature_numb = '".$features."'");
-	$rows_ozt_features = mysqli_fetch_row($sql_ozt_features);
+	//получаем количество страниц в по текущему отделу
+	$sql_ozt_features_query = mysqli_query($db,"SELECT COUNT(*) FROM ozt.ozt_sales_features WHERE mag = '".$_SESSION['postofficebox']."' AND otdel = '".$otdel."'");
+	$rows_ozt_query_result = mysqli_fetch_row($sql_ozt_features_query);
+	$features_count = $rows_ozt_query_result[0];
+	echo '<b>Страница №:</b>';
 	?>
-	<!--<h3><?=$otdel_name[$otdel]?> - страница <?=($features)?></h3>-->						
-	<h4></h4>
 	<nav aria-label="Page navigation example">
 		<ul class="pagination">
 			<?
-			for ($num_features=1;$num_features<=20;$num_features++){
+			for ($num_features=1;$num_features<=$features_count;$num_features++){
 				if ($num_features==$features){$style_features="active";}else{$style_features="";}
 				echo '<li class="page-item '.$style_features.'"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.$num_features.'">'.($num_features).'</a></li>';
 			}
+			if ($features==$features_count+1 && $features<=50) {
+				echo '<li class="page-item active"><a class="page-link" href="index.php?select_menu='.$select_menu.'&otdel='.$otdel.'&features='.$num_features.'">'.($num_features).'</a></li>';
+			}
 			?>
 		</ul>
-	</nav>
-	<?
+		<?
+	if ($features>1){
+		?>
+		<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features-1)?>" Class="btn btn-info">Пред. страница</a> 
+		<?
+	}
+	if ($features<$features_count){
+		?>
+		<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>" Class="btn btn-info">След. страница</a>  
+		<?
+	}
+	if ($features==$features_count && $features<50){
+		?>
+		<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>" Class="btn btn-info">Добавить новую страницу</a>  
+		<?
+	}
+	?>
+	</nav>	
+	<?	
+	
+	$sql_ozt_features = mysqli_query($db,"SELECT * FROM ozt.ozt_sales_features WHERE mag = '".$_SESSION['postofficebox']."' AND otdel = '".$otdel."' AND feature_numb = '".$features."'");
+	$rows_ozt_features = mysqli_fetch_row($sql_ozt_features);
+	
 	if ($info_text<>""){
 		echo '<div class="alert alert-success" role="alert">'.$info_text.'</div>';
 	}
@@ -96,21 +120,9 @@ if ($otdel>0){
 		<label>Рекомендации ОПВС:</label>
 		<textarea class="form-control" name="about_opvs"><?=$rows_ozt_features[7]?></textarea><br/>
 		<input type="submit" name="submit_edit_select2" value="Сохранить" class="btn btn-success"> <br/><br/>
-		<?
-		if ($features>1){
-			?>
-			<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features-1)?>" Class="btn btn-info">Назад</a> 
-			<?
-		}
-		?>
-		<?
-		if ($features<20){
-			?>
-			<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>" Class="btn btn-info">Далее</a>  
-			<?
-		}
-		?>
+		
 	</form>
+	</br><a class="btn btn-success" href="index.php?select_menu=<?=$select_menu?>"/>К выбору отдела</a>
 	<?
 } else {
 	?>
