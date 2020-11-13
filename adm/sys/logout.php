@@ -25,6 +25,6 @@
 	setcookie("postofficebox",$_SESSION['postofficebox'],time()-1209600);
 	setcookie("physicaldeliveryofficename",$_SESSION['physicaldeliveryofficename'],time()-1209600);
 	
-	header('Location:  /index.php');
+	header('Location:  /adm/index.php');
 	exit;
 ?>

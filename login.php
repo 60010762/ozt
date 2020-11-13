@@ -10,18 +10,7 @@ if (isset($_SESSION['user_id']))
 	header('Location: index.php');
 	exit;
 }
-//пока не будем использовать куки
-/* if (isset($_COOKIE['user_id'])){
-	$_SESSION['id'] = $_COOKIE["id"];
-	$_SESSION['user_id'] = $_COOKIE["user_id"];
-	$_SESSION['displayname'] = $_COOKIE["displayname"];
-	$_SESSION['title'] = $_COOKIE["title"];
-	$_SESSION['department'] = $_COOKIE["department"];
-	$_SESSION['postofficebox'] = $_COOKIE["postofficebox"];
-	$_SESSION['physicaldeliveryofficename'] = $_COOKIE["physicaldeliveryofficename"];
-	header('Location: index.php');
-	exit;
-} */
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -29,12 +18,6 @@ if (isset($_SESSION['user_id']))
 <?php
 	//стили
 	require_once("metacss.php");
-
-	/* if(@$_POST['text']) {  
-		$text = mysqli_real_escape_string($db,htmlspecialchars(trim($_POST['text']))); 
-	} else {		
-		$text = mysqli_real_escape_string($db,htmlspecialchars(trim($_GET['text'])));
-	} */	
 ?>
 </head>
 <body class="background" onload="$('#myModal').modal('show')">
@@ -65,14 +48,12 @@ if ($text<>""){
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<!--<h4 class="modal-title" id="myModalLabel">Ошибка</h4>-->
 		  </div>
 		  <div class="modal-body">
 			<center><h5><?=$text?></h5></center>
 		  </div>
 		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Удалить</button>
-			<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">ОК</button>
 		  </div>
 		</div>
 	  </div>

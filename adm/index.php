@@ -229,6 +229,9 @@ if($_GET['submit_del_select1']=='del') {
 					
 					//Раздел статистики
 					if ($select_menu==3) include 'menu_adm_stat.php';
+					
+					//Раздел назначения админов
+					//if ($select_menu==4) include 'menu_adm_stat.php';
 					?>
 				</main>
 			</div>
