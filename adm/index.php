@@ -240,7 +240,6 @@ if($_GET['submit_del_select1']=='del') {
 		</div>
 	<?
 	}
-	echo $_SESSION['temp'] ;
 	?>
 </body>
 </html>
