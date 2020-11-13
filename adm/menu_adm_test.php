@@ -62,11 +62,11 @@
 		}		
 	}
 	
-	if(isset($_GET['delconfirm'])) {
+/* 	if(isset($_GET['delconfirm'])) {
 		$confirm = true;
 		$id_test=$_GET['delconfirm'];
 		$select_menu = 2;
-	}
+	} */
 	
 	//Удаление теста
 	if(isset($_GET['del'])) {
@@ -152,21 +152,6 @@
 							?>
 						</ul>
 						<?
-					/* if ($features>1){
-						?>
-						<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features-1)?>&featuress=<?=$num_features?>&cmd=create&create_next=<?=$create_next?>" Class="btn btn-info">Предыдущий вопрос</a> 
-						<?
-					}
-					if ($features<$features_count){
-						?>
-						<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>&featuress=<?=$num_features?>&cmd=create&create_next=<?=$create_next?>" Class="btn btn-info">Следующий вопрос</a>  
-						<?
-					} */
-					/* if ($features==$features_count && $features<20){
-						?>
-						<a href="index.php?select_menu=<?=$select_menu?>&otdel=<?=$otdel?>&features=<?=($features+1)?>&featuress=<?=$num_features?>&cmd=create&create_next=<?=$create_next?>" Class="btn btn-info">Добавить новый вопрос</a>  
-						<?
-					} */
 					?>
 					</nav><hr>
 					
@@ -246,16 +231,18 @@
 				echo '<input type="hidden" name="otdel" value="'.$otdel.'">';
 				echo '<input type="hidden" name="cmd" value="create">';
 				?>
-			
-				<input class="form-control" name="name_test" required placeholder="Название нового теста">
-				<input type="submit" name="submit_edit_select4" value="Создать новый тест" class="btn btn-success">
+				<div style="display:  flex">
+					<input class="form-control" style="width: 50%;" name="name_test" required placeholder="Название нового теста">
+					&ensp;
+					<input type="submit" style="width: 180px;" name="submit_edit_select4" value="Создать новый тест" class="btn btn-success">
+				</div>
 			</form>
 			<?
 			$sql_ozt_question = mysqli_query($db,"SELECT id, name, DATE(date) FROM `ozt`.`ozt_question` WHERE mag = '".$_SESSION['postofficebox']."' AND otdel = '".$otdel."'");
 			$nums_question = mysqli_num_rows($sql_ozt_question);
 			if ($nums_question>0){
 				
-				echo '<hr/><table class="table table-bordered">';
+				echo '</br><table class="table table-bordered">';
 				echo '<tr><th>#</th><th>Название теста</th><th>Создан</th><th>Редактирование</th><th>Удаление</th></tr>';
 				
 				while($rows_question = mysqli_fetch_row($sql_ozt_question)){

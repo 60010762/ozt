@@ -54,16 +54,26 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
             $_SESSION['postofficebox'] = $result_ent[0]["postofficebox"][0]; //номер магазина
             $_SESSION['physicaldeliveryofficename'] = $result_ent[0]["physicaldeliveryofficename"][0]; //название магазина
 			
-			//проверка, есть ли у юзера права админа
-			$sql =  "SELECT id_question, result FROM ozt.ozt_user_test_status WHERE ldap = '".$_SESSION['user_id']."' and status = 'не завершён'";
-			$sql_ozt_test = mysqli_query($db, $sql);
-			$rows_ozt_test = mysqli_fetch_row($sql_ozt_test);
-			if ($rows_ozt_test[0] <> "") {
-			//$_SESSION['role'] = $result_ent[0]["title"][0]; //этот юзер админ?			
+			
+			if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки") {
+				//проверка, есть ли у юзера назначенные права админа
+				$sql =  "SELECT ldap, name FROM ozt.ozt_admins WHERE mag = '".$_SESSION['postofficebox']."'";
+				$sql_ozt_admins = mysqli_query($db, $sql);
+				$rows_ozt_admins = mysqli_fetch_row($sql_ozt_admins);
+				if ($rows_ozt_admins[0] <> "") {
+					$_SESSION['role'] = "adm";
+				}
+			}
+			//$_SESSION['role'] = $result_ent[0]["title"][0]; //этот юзер админ?	
+
+
+			
 			//проверка, есть ли у пользователя незаконченный тест
 			$sql =  "SELECT id_question, result FROM ozt.ozt_user_test_status WHERE ldap = '".$_SESSION['user_id']."' and status = 'не завершён'";
 			$sql_ozt_test = mysqli_query($db, $sql);
 			$rows_ozt_test = mysqli_fetch_row($sql_ozt_test);
+			
+			
 			//если есть, то отмечаем в сессии текущий тест и вопрос
 			if ($rows_ozt_test[0] <> "") {
 				$_SESSION['test_in_progress'] = $rows_ozt_test[0];

@@ -1,15 +1,20 @@
 <?php
 //Подключаем конфигурационный файл
 $username = mysqli_real_escape_string($db,htmlspecialchars(trim($_POST['login'])));
-if ($username>60000000 and $username<69999999) {
-	include_once ("ldap.php");
+if ($username != "") {
+	if (is_numeric($username) && $username>55000000 and $username<69999999) {
+		if ($username>60000000) {
+			include_once ("ldap.php");
+		}
+		if ($username<59999999) {
+			include_once ("ldap_by.php");
+		}
+	} else {
+		$text="Неверно введён логин";
+	} 
 }
-if ($username>55000000 and $username<59999999) {
-	include_once ("ldap_by.php");
-}
- 
 //Если пользователь не аутентифицирован, то проверить его используя LDAP
-if (isset($_POST['login']) && isset($_POST['password']))
+if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
       {
       
 		  $login = $username.$domain;
@@ -23,7 +28,7 @@ if (isset($_POST['login']) && isset($_POST['password']))
             {
             // Пытаемся войти в LDAP при помощи введенных логина и пароля
 			ini_set('display_errors','Off');
-			if(!ldap_bind($ldap,$login,$password)){$text="Не верный логин или пароль";} else {$bind = ldap_bind($ldap,$login,$password);}
+			if(!ldap_bind($ldap,$login,$password)){$text="Неверный логин или пароль";} else {$bind = ldap_bind($ldap,$login,$password);}
 			
 			//ini_set('display_errors','On');
 			error_reporting('E_ALL');
@@ -34,18 +39,50 @@ if (isset($_POST['login']) && isset($_POST['password']))
 					// Получаем количество результатов предыдущей проверки
 					$result_ent = ldap_get_entries($ldap,$result);
             } else {
-				$text="Не верный логин или пароль";
+				$text="Неверный логин или пароль";
 			}
       }
 	
       if ($result_ent['count'] != 0)
-            {
+            {			
+			$_SESSION['id'] = $username.date("mdy").date("His"); //лдап
+			$_SESSION['timeactivity'] = new DateTime("now");
             $_SESSION['user_id'] = $username; //лдап
             $_SESSION['displayname'] = $result_ent[0]["displayname"][0]; //фио
             $_SESSION['title'] = $result_ent[0]["title"][0]; //должность
             $_SESSION['department'] = $result_ent[0]["department"][0]; //отдел
             $_SESSION['postofficebox'] = $result_ent[0]["postofficebox"][0]; //номер магазина
             $_SESSION['physicaldeliveryofficename'] = $result_ent[0]["physicaldeliveryofficename"][0]; //название магазина
+			
+			
+			if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки") {
+				//проверка, есть ли у юзера назначенные права админа
+				$sql =  "SELECT ldap, name FROM ozt.ozt_admins WHERE mag = '".$_SESSION['postofficebox']."'";
+				$sql_ozt_admins = mysqli_query($db, $sql);
+				$rows_ozt_admins = mysqli_fetch_row($sql_ozt_admins);
+				if ($rows_ozt_admins[0] <> "") {
+					$_SESSION['role'] = "adm";
+				}
+			}
+			//$_SESSION['role'] = $result_ent[0]["title"][0]; //этот юзер админ?	
+
+
+			
+			//проверка, есть ли у пользователя незаконченный тест
+			$sql =  "SELECT id_question, result FROM ozt.ozt_user_test_status WHERE ldap = '".$_SESSION['user_id']."' and status = 'не завершён'";
+			$sql_ozt_test = mysqli_query($db, $sql);
+			$rows_ozt_test = mysqli_fetch_row($sql_ozt_test);
+			
+			
+			//если есть, то отмечаем в сессии текущий тест и вопрос
+			if ($rows_ozt_test[0] <> "") {
+				$_SESSION['test_in_progress'] = $rows_ozt_test[0];
+				$_SESSION['test_current_question'] = $rows_ozt_test[1];			
+			} 
+			
+			//запишем для статистики ldap и время входа
+			$sql =  "INSERT INTO ozt.ozt_user_activity (session_id, mag, entered) VALUES ('".$_SESSION['id']."', '".$_SESSION['postofficebox']."', now())";
+			$sql_ozt_stat = mysqli_query($db, $sql);
       }
 }
 ?>

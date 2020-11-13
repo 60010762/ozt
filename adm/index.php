@@ -78,6 +78,7 @@ $title_name[0]="Страница приветствия";
 $title_name[1]="Особенности продаж";
 $title_name[2]="Редактор тестов";
 $title_name[3]="Статистика";
+$title_name[4]="Администраторы";
 
 //Массив отделов
 $otdel_name[1]="Стройматериалы";
@@ -147,7 +148,7 @@ if($_GET['submit_del_select1']=='del') {
 <body>
 	<?
 	//к разделу админки имеют доступ только менеджер сектора касс и сотрудник техподдержки
-	if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки") {
+	if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки" && $_SESSION['role'] != "adm") {
 		echo '<h4>У вас нет доступа к этому разделу</h4><br>';
 		echo '<a class="nav-link" href="sys/logout.php">Выход</a>';
 	} else {
@@ -162,10 +163,9 @@ if($_GET['submit_del_select1']=='del') {
 						<a class="dropdown-item" href="../index.php">Интерфейс пользователя</a><div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="index.php?select_menu=0"><?=$title_name[0]?></a>
 						<a class="dropdown-item" href="index.php?select_menu=1"><?=$title_name[1]?></a>
-						<a class="dropdown-item" href="index.php?select_menu=2"><?=$title_name[2]?></a>
+						<a class="dropdown-item" href="index.php?select_menu=2"><?=$title_name[2]?></a><div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="index.php?select_menu=3"><?=$title_name[3]?></a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="sys/logout.php">Выход</a>
+						<a class="dropdown-item" href="index.php?select_menu=4"><?=$title_name[4]?></a>
 					</div>					
 				</div>
 
@@ -184,7 +184,8 @@ if($_GET['submit_del_select1']=='del') {
 					<a href="index.php?select_menu=0"><?=$title_name[0]?></a>&ensp;&bull;&nbsp;
 					<a href="index.php?select_menu=1"><?=$title_name[1]?></a>&ensp;&bull;&nbsp;
 					<a href="index.php?select_menu=2"><?=$title_name[2]?></a>&ensp;&bull;&nbsp;
-					<a href="index.php?select_menu=3"><?=$title_name[3]?></a>
+					<a href="index.php?select_menu=3"><?=$title_name[3]?></a>&ensp;&bull;&nbsp;
+					<a href="index.php?select_menu=4"><?=$title_name[4]?></a>
 
 					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 						<?
@@ -203,7 +204,7 @@ if($_GET['submit_del_select1']=='del') {
 							<?
 							echo '<input type="hidden" name="select_menu" value="'.$select_menu.'">';
 							if ($rows_ozt_about[1]<>''){
-								echo '<img src="'.$rows_ozt_about[1].'" class="img-thumbnail" style="width: 30%"><br/>';
+								echo '</br><img src="'.$rows_ozt_about[1].'" class="img-thumbnail" style="width: 30%"><br/>';
 							}
 							?>
 							<label for="exampleFormControlFile1">Выбрать картинку для описания</label><br/>
@@ -231,13 +232,15 @@ if($_GET['submit_del_select1']=='del') {
 					if ($select_menu==3) include 'menu_adm_stat.php';
 					
 					//Раздел назначения админов
-					//if ($select_menu==4) include 'menu_adm_stat.php';
+					if ($select_menu==4) include 'menu_adm_admins.php';
+						
 					?>
 				</main>
 			</div>
 		</div>
 	<?
 	}
+	echo $_SESSION['temp'] ;
 	?>
 </body>
 </html>

@@ -139,15 +139,13 @@ $otdel_name[15]="Кухни";
 				echo '<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				Меню</a>';
 				echo '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
-					if ($_SESSION['title'] == "менеджер сектора по обслуживанию клиентов" || $_SESSION['title'] == "специалист технической поддержки") {
-						echo '<a class="dropdown-item" href="adm/index.php">Администрирование</a><div class="dropdown-divider"></div>';
-					}
-					echo '<a class="dropdown-item" href="https://m.leroymerlin.ru/catalogue/" target="_blank">Каталог товаров</a>';
-					echo '<a class="dropdown-item" href="index.php?select_menu=2">Особенности продаж</a>';
-					echo '<a class="dropdown-item" href="index.php?select_menu=1">Тест</a>';
-					echo '<a class="dropdown-item" href="index.php?select_menu=0">В начало</a>';
-					echo '<div class="dropdown-divider"></div>';
-					echo '<a class="dropdown-item" href="sys/logout.php">Выход</a>';
+				if ($_SESSION['title'] == "менеджер сектора по обслуживанию клиентов" || $_SESSION['title'] == "специалист технической поддержки" || $_SESSION['role'] == "adm") {
+					echo '<a class="dropdown-item" href="adm/index.php">Администрирование</a><div class="dropdown-divider"></div>';
+				}
+				echo '<a class="dropdown-item" href="https://m.leroymerlin.ru/catalogue/" target="_blank">Каталог товаров</a>';
+				echo '<a class="dropdown-item" href="index.php?select_menu=2">Особенности продаж</a>';
+				echo '<a class="dropdown-item" href="index.php?select_menu=1">Тест</a>';
+				echo '<a class="dropdown-item" href="index.php?select_menu=0">В начало</a>';
 				echo '</div>';
 		}		
 		?>                
@@ -169,6 +167,7 @@ $otdel_name[15]="Кухни";
 		<form name="formalogin" action="index.php" method="post" ENCTYPE="multipart/form-data">				
 			 <center>				 
 				<div class="col-sm-4 col-sm-offset-4">
+					</br>
 					<?
 					echo '<input type="hidden" name="select_menu" value="'.$select_menu.'">';
 					if ($rows_ozt_about[1]<>''){
