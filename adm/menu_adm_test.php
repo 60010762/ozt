@@ -124,7 +124,7 @@
 					echo '<b>Вопрос №:</b>';
 					?>
 					<nav aria-label="Page navigation example">
-						<ul class="pagination">
+						<ul class="pagination" style="flex-wrap: wrap">
 							<?
 							//стрелки навигации по вопросам
 							if ($features>1) {

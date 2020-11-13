@@ -116,8 +116,8 @@ if ($otdel>0){
 		}
 		?>
 		<input type="file" name="filename"  /><hr>
-		<label>Особенности:</label>
-		<textarea class="form-control" name="about_op"><?=$rows_ozt_features[5]?></textarea><br/>
+		<label>Особенности:</label><font color="red">*</font>
+		<textarea class="form-control" name="about_op" required><?=$rows_ozt_features[5]?></textarea><br/>
 		<label>Послепродажное обслуживание:</label>
 		<textarea class="form-control" name="about_ppo"><?=$rows_ozt_features[6]?></textarea><br/>
 		<label>Рекомендации ОПВС:</label>
