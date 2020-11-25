@@ -69,9 +69,6 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
 					$_SESSION['role'] = "adm";
 				}
 			}
-			//$_SESSION['role'] = $result_ent[0]["title"][0]; //этот юзер админ?	
-
-
 			
 			//проверка, есть ли у пользователя незаконченный тест
 			$sql =  "SELECT id_question, result FROM ozt.ozt_user_test_status WHERE ldap = '".$_SESSION['user_id']."' and status = 'не завершён'";
