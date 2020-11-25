@@ -54,6 +54,11 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
             $_SESSION['postofficebox'] = $result_ent[0]["postofficebox"][0]; //номер магазина
             $_SESSION['physicaldeliveryofficename'] = $result_ent[0]["physicaldeliveryofficename"][0]; //название магазина
 			
+			//временно для проверки ИБ
+			if ($username==60038028) {
+				$_SESSION['postofficebox'] = 12;
+				$_SESSION['title'] = "менеджер сектора по обслуживанию клиентов"; //должность
+			}
 			
 			if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки") {
 				//проверка, есть ли у юзера назначенные права админа
