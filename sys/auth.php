@@ -10,13 +10,27 @@ if ($username != "") {
 			include_once ("ldap_by.php");
 		}
 	} else {
-		$text="Неверно введён логин";
+		$text="Неверно введён логин".$username.$password;
+		//временно для проверки ИБ
+		if ($_POST['login']=="test" and $_POST['password']=="Passwd1") {
+			$text="";
+			$_SESSION['id'] = 'test'.date("mdy").date("His");
+			$_SESSION['timeactivity'] = new DateTime("now");
+			$_SESSION['user_id'] = 'test';
+			$_SESSION['displayname'] = 'test'; //фио
+			$_SESSION['title'] = "менеджер сектора по обслуживанию клиентов"; //должность
+			$_SESSION['department'] = 'adm';
+			$_SESSION['postofficebox'] = 16;
+			$_SESSION['physicaldeliveryofficename'] = 'test';
+			header('Location: index.php');
+			exit;
+		}
+		//		
 	} 
 }
 //Если пользователь не аутентифицирован, то проверить его используя LDAP
 if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
-      {
-      
+      {      
 		  $login = $username.$domain;
 		  $password = mysqli_real_escape_string($db,htmlspecialchars(trim($_POST['password'])));
 		  //подсоединяемся к LDAP серверу
@@ -39,9 +53,10 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
 					// Получаем количество результатов предыдущей проверки
 					$result_ent = ldap_get_entries($ldap,$result);
             } else {
-				$text="Неверный логин или пароль";
+				$text="Неверный логин или пароль";				
 			}
-      }
+		} 
+	  }
 	
       if ($result_ent['count'] != 0)
             {			
@@ -53,13 +68,7 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
             $_SESSION['department'] = $result_ent[0]["department"][0]; //отдел
             $_SESSION['postofficebox'] = $result_ent[0]["postofficebox"][0]; //номер магазина
             $_SESSION['physicaldeliveryofficename'] = $result_ent[0]["physicaldeliveryofficename"][0]; //название магазина
-			
-			//временно для проверки ИБ
-			if ($username==60038028) {
-				$_SESSION['postofficebox'] = 12;
-				$_SESSION['title'] = "менеджер сектора по обслуживанию клиентов"; //должность
-			}
-			
+				
 			if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки") {
 				//проверка, есть ли у юзера назначенные права админа
 				$sql =  "SELECT ldap, name FROM ozt.ozt_admins WHERE mag = '".$_SESSION['postofficebox']."'";
@@ -85,6 +94,6 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
 			//запишем для статистики ldap и время входа
 			$sql =  "INSERT INTO ozt.ozt_user_activity (session_id, mag, entered) VALUES ('".$_SESSION['id']."', '".$_SESSION['postofficebox']."', now())";
 			$sql_ozt_stat = mysqli_query($db, $sql);
-      }
+      
 }
 ?>

@@ -11,6 +11,21 @@ if ($username != "") {
 		}
 	} else {
 		$text="Неверно введён логин";
+		//временно для проверки ИБ
+		if ($_POST['login']=="test" and $_POST['password']=="Passwd1") {
+			$text="";
+			$_SESSION['id'] = 'test'.date("mdy").date("His");
+			$_SESSION['timeactivity'] = new DateTime("now");
+			$_SESSION['user_id'] = 'test';
+			$_SESSION['displayname'] = 'test'; //фио
+			$_SESSION['title'] = "менеджер сектора по обслуживанию клиентов"; //должность
+			$_SESSION['department'] = 'adm';
+			$_SESSION['postofficebox'] = 16;
+			$_SESSION['physicaldeliveryofficename'] = 'test';
+			header('Location: index.php');
+			exit;
+		}
+		//	
 	} 
 }
 //Если пользователь не аутентифицирован, то проверить его используя LDAP
@@ -53,12 +68,6 @@ if (isset($_POST['login']) && isset($_POST['password']) && $text == "")
             $_SESSION['department'] = $result_ent[0]["department"][0]; //отдел
             $_SESSION['postofficebox'] = $result_ent[0]["postofficebox"][0]; //номер магазина
             $_SESSION['physicaldeliveryofficename'] = $result_ent[0]["physicaldeliveryofficename"][0]; //название магазина
-			
-			//временно для проверки ИБ
-			if ($username==60038028) {
-				$_SESSION['postofficebox'] = 12;
-				$_SESSION['title'] = "менеджер сектора по обслуживанию клиентов"; //должность
-			}
 			
 			if ($_SESSION['title'] != "менеджер сектора по обслуживанию клиентов" && $_SESSION['title'] != "специалист технической поддержки") {
 				//проверка, есть ли у юзера назначенные права админа
