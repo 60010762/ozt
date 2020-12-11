@@ -1,10 +1,15 @@
 <?php //интерфейс пользователя
-header ("Content-Type: text/html; charset=utf-8");
+header ("Content-Type: text/html; charset=utf-8; Content-Security-Policy: script-src 'self';Referrer-Policy: strict-origin-when-cross-origin");
+
 //и так понятно
 session_start(); 
 
 //скрываем ошибки
-//ini_set('display_errors','Off');
+ini_set('display_errors', 0); 
+ini_set('display_startup_errors', 0); 
+error_reporting(0);
+
+
 
 //Проверяем авторизован ли пользователь
 if (!isset($_SESSION['user_id']))
@@ -139,9 +144,6 @@ $otdel_name[15]="Кухни";
 				echo '<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				Меню</a>';
 				echo '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
-				if ($_SESSION['title'] == "менеджер сектора по обслуживанию клиентов" || $_SESSION['title'] == "специалист технической поддержки" || $_SESSION['role'] == "adm") {
-					echo '<a class="dropdown-item" href="adm/index.php">Администрирование</a><div class="dropdown-divider"></div>';
-				}
 				echo '<a class="dropdown-item" href="https://m.leroymerlin.ru/catalogue/" target="_blank">Каталог товаров</a>';
 				echo '<a class="dropdown-item" href="index.php?select_menu=2">Особенности продаж</a>';
 				echo '<a class="dropdown-item" href="index.php?select_menu=1">Тест</a>';

@@ -1,5 +1,11 @@
 <?
 session_start();
+
+//скрываем ошибки
+ini_set('display_errors', 0); 
+ini_set('display_startup_errors', 0); 
+error_reporting(0);
+
 //Подключение к БД
 require 'sys/db_config.php';
 $db = mysqli_connect(DB_SERVER, DB_USER, DB_PASSWORD,DB_DATABASE);
@@ -32,7 +38,7 @@ if (isset($_SESSION['user_id']))
 						<label>LDAP <font color="red">*</font></label>
 						<input type="text" class="form-control" name="login" placeholder="600XXXXX" required autofocus><br/>
 						<label>Пароль <font color="red">*</font></label>
-						<input type="password" class="form-control" name="password" placeholder="Password" required><br/>
+						<input type="password" autocomplete="off" class="form-control" name="password" placeholder="Password" required><br/>
 						<button class="btn btn-lg btn-success btn-block" type="submit">Войти</button>
 					</form>
 				</div>

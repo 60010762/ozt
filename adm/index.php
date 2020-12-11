@@ -4,7 +4,9 @@ header ("Content-Type: text/html; charset=utf-8");
 session_start(); 
 
 //скрываем ошибки
-//ini_set('display_errors','Off');
+ini_set('display_errors', 0); 
+ini_set('display_startup_errors', 0); 
+error_reporting(0);
 
 //Проверяем авторизован ли пользователь
 if (!isset($_SESSION['user_id']))
@@ -159,8 +161,7 @@ if($_GET['submit_del_select1']=='del') {
 					<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						 Меню
 					</a>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-						<a class="dropdown-item" href="../index.php">Интерфейс пользователя</a><div class="dropdown-divider"></div>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">						
 						<a class="dropdown-item" href="index.php?select_menu=0"><?=$title_name[0]?></a>
 						<a class="dropdown-item" href="index.php?select_menu=1"><?=$title_name[1]?></a>
 						<a class="dropdown-item" href="index.php?select_menu=2"><?=$title_name[2]?></a><div class="dropdown-divider"></div>
@@ -213,7 +214,7 @@ if($_GET['submit_del_select1']=='del') {
 								echo '<a href="index.php?select_menu='.$select_menu.'&submit_del_select1=del" Class="btn btn-danger btn-sm">Удалить изображение</a> или ';
 							}
 							?>
-							<input type="file" name="filename"  /><hr>
+							<input type="file" name="filename" accept="image/*" /><hr>
 							<label>Описание:</label>
 							<textarea class="form-control" name="about"><?=$rows_ozt_about[2]?></textarea><br/>
 							<div class="col-sm-4 col-sm-offset-4">

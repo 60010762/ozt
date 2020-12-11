@@ -1,5 +1,11 @@
 <?
 session_start();
+
+//скрываем ошибки
+ini_set('display_errors', 0); 
+ini_set('display_startup_errors', 0); 
+error_reporting(0);
+
 //Подключение к БД
 require 'sys/db_config.php';
 $db = mysqli_connect(DB_SERVER, DB_USER, DB_PASSWORD,DB_DATABASE);
