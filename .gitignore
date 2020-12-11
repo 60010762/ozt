@@ -1,0 +1,5 @@
+sys/auth.php
+sys/db_config.php
+adm/sys/auth.php
+adm/sys/db_config.php
+adm/upload/

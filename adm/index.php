@@ -1,5 +1,5 @@
 <?php  //интерфейс администратора
-header ("Content-Type: text/html; charset=utf-8");
+header ("Content-Type: text/html; charset=utf-8; Content-Security-Policy: script-src 'self';Referrer-Policy: strict-origin-when-cross-origin");
 //и так понятно
 session_start(); 
 
@@ -103,27 +103,37 @@ $otdel_name[15]="Кухни";
 //Описание общее
 if(@$_POST['submit_edit_select1']) {
 	$about = mysqli_real_escape_string($db,htmlspecialchars(trim($_POST['about']))); 
-	if ($_FILES['filename'.$zo]['name']<>''){
+	if ($_FILES['filename']['name']<>''){
 		$max_file_size = 10; // Максимальный размер файла в МегаБайтах
+		$max_server_size = ini_get('post_max_size');
 		$path = 'upload/';
-		$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm", ".js", ".css", ".tmp", ".xls", ".xlsx");
-		foreach ($blacklist as $item)
-		if(preg_match("/$item\$/i", $_FILES['filename']['name'])) exit;
-		// СТАРТ Загрузка файла на сервер
-		if($_FILES["filename"]["size"] > $max_file_size*256*256){
-			$text =  'Размер файла превышает '.$max_file_size.' Мб!';
-		}
-		if(copy($_FILES["filename"]["tmp_name"],$path.$_SESSION['postofficebox']." - ".$_FILES["filename"]["name"])){
-			$img = $path.$_SESSION['postofficebox']." - ".$_FILES["filename"]["name"];
-		}
-		
-		$sql2 = mysqli_query($db,"SELECT * FROM `ozt`.`ozt_about` WHERE mag = '".$_SESSION['postofficebox']."'");
-		if (mysqli_num_rows($sql2)>0){
-			$result = mysqli_query($db,"UPDATE `ozt`.`ozt_about` SET img='".$img."',about='".$about."' WHERE mag = '".$_SESSION['postofficebox']."'");
+		$whitelist = array("jpg", "jpeg", "png", "bmp", "gif");
+		$fsize = $_FILES['filename']['size'];
+		$fname = $_FILES['filename']['name'];
+		//foreach ($whitelist as $item)
+		//if(preg_match("/$item\$/i", $_FILES['filename']['name'])) {
+		if (in_array(end(explode(".", $fname)), $whitelist) && $fsize < $max_file_size * 1024 * 1024) {
+			// СТАРТ Загрузка файла на сервер
+			if($fsize < 10485760){
+				if(copy($_FILES["filename"]["tmp_name"],$path.$_SESSION['postofficebox']." - ".$_FILES["filename"]["name"])){
+					$img = $path.$_SESSION['postofficebox']." - ".$_FILES["filename"]["name"];
+				}
+				
+				$sql2 = mysqli_query($db,"SELECT * FROM `ozt`.`ozt_about` WHERE mag = '".$_SESSION['postofficebox']."'");
+				if (mysqli_num_rows($sql2)>0){
+					$result = mysqli_query($db,"UPDATE `ozt`.`ozt_about` SET img='".$img."',about='".$about."' WHERE mag = '".$_SESSION['postofficebox']."'");
+				} else {
+					$result = mysqli_query($db,"INSERT INTO `ozt`.`ozt_about` (`img`, `about`, `mag`) VALUES ('".$img."','".$about."','".$_SESSION['postofficebox']."')");
+				}
+			} else {
+				$text =  'Размер файла превышает '.$max_file_size.' Мб!';
+			}
+			
 		} else {
-			$result = mysqli_query($db,"INSERT INTO `ozt`.`ozt_about` (`img`, `about`, `mag`) VALUES ('".$img."','".$about."','".$_SESSION['postofficebox']."')");
-		}
+			$text = "Файл изображения должен быть одного из типов .jpg, .jpeg, .png, .bmp. и не превышать ".$_FILES["filename"]["type"];
+		}		
 	} else {
+		$text = "Файл изображения должен быть одного из типов .jpg, .jpeg, .png, .bmp. и не превышать ".$fsize;
 		$sql2 = mysqli_query($db,"SELECT * FROM `ozt`.`ozt_about` WHERE mag = '".$_SESSION['postofficebox']."'");
 		if (mysqli_num_rows($sql2)>0){
 			$result = mysqli_query($db,"UPDATE `ozt`.`ozt_about` SET about='".$about."' WHERE mag = '".$_SESSION['postofficebox']."'");
@@ -131,6 +141,7 @@ if(@$_POST['submit_edit_select1']) {
 			$result = mysqli_query($db,"INSERT INTO `ozt`.`ozt_about` (`about`, `mag`) VALUES (''".$about."','".$_SESSION['postofficebox']."')");
 		}
 	}
+	$text = $_FILES['filename']['type'];
 }
 
 if($_GET['submit_del_select1']=='del') {
@@ -201,14 +212,51 @@ if($_GET['submit_del_select1']=='del') {
 						$sql_ozt_about = mysqli_query($db,"SELECT * FROM `ozt`.`ozt_about` WHERE mag = '".$_SESSION['postofficebox']."'");
 						$rows_ozt_about = mysqli_fetch_row($sql_ozt_about);
 						?>
+						<form action="upload" enctype="multipart/form-data" method="post">
+
+							Upload image:
+							<div><img alt="" id="image_preview" src="" class="img-thumbnail" style="width: 30%"></div>
+							<input id="image-file" type="file" name="file" accept="image/*"/>
+							<input type="submit" id="btn" value="Upload" />
+							<p id="txt"> </p>
+							<script type="text/javascript">
+								
+								
+								$('#image-file').bind('change', function() {
+									arr = [ "image/jpg", "image/jpeg", "image/png", "image/bmp"];
+									
+									
+									 if (this.files[0].size < 10485760 && arr.indexOf(this.files[0].type) >= 0) {
+										 btn.disabled = false;
+										 /*alert('This file type is: ' + this.files[0].type);*/
+										var reader = new FileReader();
+										reader.onload = function(e) { $('#image_preview').attr('src', e.target.result); }
+										reader.readAsDataURL(this.files[0]);
+									 } else {
+										let txt   = document.querySelector('#txt');
+										btn = document.querySelector('#btn');
+										
+										txt.innerHTML = '<font color="red">Файл не соответствует параметрам. Размер ' + this.files[0].size + ', тип ' + this.files[0].type + '</font>';										 
+										btn.disabled = true;
+										$('#image_preview').attr('src', '');
+									 }
+									
+								});
+							</script>
+
+						</form>
+						
 						<form name="formalogin" action="index.php" method="post" ENCTYPE="multipart/form-data">
 							<?
 							echo '<input type="hidden" name="select_menu" value="'.$select_menu.'">';
 							if ($rows_ozt_about[1]<>''){
 								echo '</br><img src="'.$rows_ozt_about[1].'" class="img-thumbnail" style="width: 30%"><br/>';
 							}
+							if ($text<>""){
+								echo '<div class="alert alert-success" role="alert">'.$text.'</div>';
+							}
 							?>
-							<label for="exampleFormControlFile1">Выбрать картинку для описания</label><br/>
+							<label for="exampleFormControlFile1">Выбрать картинку для описания. </label><br/>
 							<?
 							if ($rows_ozt_about[1]<>''){
 								echo '<a href="index.php?select_menu='.$select_menu.'&submit_del_select1=del" Class="btn btn-danger btn-sm">Удалить изображение</a> или ';
