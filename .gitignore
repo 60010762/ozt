@@ -1,5 +1,4 @@
-sys/db_config.php
-adm/sys/db_config.php
-sys/ldap.php
-adm/sys/ldap.php
+sys/
+adm/sys/
+adm/upload/
 
